@@ -88,10 +88,11 @@ def analyze():
         if nutrition_data:
             chart_path = generate_chart(nutrition_data)
             calories = next((n["amount"] for n in nutrition_data["nutrition"]["nutrients"] if n["name"] == "Calories"), 0)
+            chart_path = url_for('static', filename='chart.png', _external=True)
             return jsonify({
                 "dish": dish_name,
                 "calories": calories,
-                "chart_url": f"/static/chart.png"
+                "chart_url": chart_path
             })
     return jsonify({"error": "Dish not found or nutrition data unavailable."}), 400
 
