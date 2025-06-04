@@ -99,11 +99,12 @@ def analyze():
             print("File exists?", os.path.exists("static/chart.png"))
             print("File size:", os.path.getsize("static/chart.png") if os.path.exists("static/chart.png") else "N/A")
 
-            chart_path = url_for('static', filename='chart.png', _external=True)
+            chart_url = url_for('static_files', filename='chart.png', _external=True)
+
             return jsonify({
                 "dish": dish_name,
                 "calories": calories,
-                "chart_url": chart_path
+                "chart_url": chart_url
             })
     return jsonify({"error": "Dish not found or nutrition data unavailable."}), 400
 from flask import send_from_directory
