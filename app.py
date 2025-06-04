@@ -62,16 +62,23 @@ def generate_chart(nutrition_data):
             labels.append(n["name"])
             values.append(n["amount"])
 
+    # Ensure the static folder exists
+    os.makedirs("static", exist_ok=True)
+
+    # Plot and save
     plt.figure(figsize=(8, 5))
     plt.bar(labels, values, color='skyblue')
     plt.xlabel("Nutrients")
     plt.ylabel("Amount")
     plt.title("Nutrition Breakdown")
     plt.tight_layout()
+
     chart_path = os.path.join("static", "chart.png")
     plt.savefig(chart_path)
     plt.close()
+
     return chart_path
+
 
 
 @app.route("/analyze", methods=["POST"])
@@ -88,6 +95,10 @@ def analyze():
         if nutrition_data:
             chart_path = generate_chart(nutrition_data)
             calories = next((n["amount"] for n in nutrition_data["nutrition"]["nutrients"] if n["name"] == "Calories"), 0)
+            print("Chart generated at:", chart_path)
+            print("File exists?", os.path.exists("static/chart.png"))
+            print("File size:", os.path.getsize("static/chart.png") if os.path.exists("static/chart.png") else "N/A")
+
             chart_path = url_for('static', filename='chart.png', _external=True)
             return jsonify({
                 "dish": dish_name,
